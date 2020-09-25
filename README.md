@@ -75,22 +75,20 @@ done
 #### Implementation
 
 ```
-sudo zpool create                                                                       \
-    -o ashift=13                                                                        \
-    db05                                                                                \
-    mirror                                                                              \
+sudo zpool create                          \
+    -o ashift=13                           \
+    db05                                   \
+    mirror                                 \
         /dev/disk/by-id/nvme-P4610_Drive01 \
         /dev/disk/by-id/nvme-P4610_Drive02 \
-    mirror                                                                              \
+    mirror                                 \
         /dev/disk/by-id/nvme-P4610_Drive03 \
         /dev/disk/by-id/nvme-P4610_Drive04 \
-
-[etc.]
-
-    mirror                                                                              \
+# [etc.]                                   \
+    mirror                                 \
         /dev/disk/by-id/nvme-P4610_Drive21 \
         /dev/disk/by-id/nvme-P4610_Drive22 \
-    spare                                                                               \
+    spare                                  \
         /dev/disk/by-id/nvme-P4610_Drive23 \
         /dev/disk/by-id/nvme-P4610_Drive24
 ```
