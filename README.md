@@ -77,7 +77,7 @@ done
 ```
 sudo zpool create                          \
     -o ashift=13                           \
-    db05                                   \
+    db01                                   \
     mirror                                 \
         /dev/disk/by-id/nvme-P4610_Drive01 \
         /dev/disk/by-id/nvme-P4610_Drive02 \
