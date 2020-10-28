@@ -161,6 +161,10 @@ sudo zfs create                 \
 
 * We disable AIO, which performs poorly on Linux: `innodb_use_native_aio=0`, `innodb_use_atomic_writes=0`.<sup>[2](#fn2)</sup>
 
+* We disable proactively flushing pages in the same extent, because group writes are not an issue with aligned page/record sizes: `innodb_flush_neighbors=0`.<sup>[22](#fn22),[23](#fn23)</sup>
+
+* We increase target & max IOPS above the defaults. We still use conservative values to avoid excessive SSD wear,<sup>[24](#fn24)</sup> but the defaults were tuned for spinning disks: `innodb_io_capacity=1000`, `innodb_io_capacity_max=2500`.<sup>[23](#fn23)</sup>
+
 ## Operations
 
 * We'll run regular scrubs (integrity checks) of zpools.<sup>[3](#fn3),[11](#fn11),[19](#fn19)</sup>
@@ -210,3 +214,9 @@ sudo zfs create                 \
 <a name="fn20">20</a>: https://github.com/prometheus/node_exporter/pull/1632
 
 <a name="fn21">21</a>: https://zfsonlinux.org/manpages/0.8.4/man8/zfs.8.html
+
+<a name="fn22">22</a>: https://blog.pythian.com/exposing-innodb-internals-via-system-variables-part-3-io-table-data/
+
+<a name="fn23">23</a>: https://dev.mysql.com/doc/refman/5.7/en/optimizing-innodb-diskio.html
+
+<a name="fn24">24</a>: https://www.percona.com/blog/2019/12/18/give-love-to-your-ssds-reduce-innodb_io_capacity_max/
