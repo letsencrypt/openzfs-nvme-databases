@@ -64,6 +64,8 @@ done
 
 * We match our drives' best-performing 8KB sector size: `ashift=13`.<sup>[1](#fn1),[2](#fn2),[3](#fn3),[4](#fn4)</sup>
 
+* We want to automatically activate hot spare drives if another drive fails: `autoreplace=on`.<sup>[3](#fn3)</sup>
+
 * We use `/dev/disk/by-id/` paths to identify drives, in case they're swapped around to different drive bays or the OS' device naming schema changes.<sup>[3](#fn3)</sup>
 
 * We use RAID-1+0, in order to achieve the best possible performance without being vulnerable to a single-drive failure.<sup>[3](#fn3),[10](#fn10),[12](#fn12),[13](#fn13),[14](#fn14)</sup>
@@ -77,6 +79,7 @@ done
 ```
 sudo zpool create                          \
     -o ashift=13                           \
+    -o autoreplace=on                      \
     db01                                   \
     mirror                                 \
         /dev/disk/by-id/nvme-P4610_Drive01 \
@@ -99,8 +102,6 @@ sudo zpool create                          \
 
 * We've no need to incur the overhead of tracking when files were last accessed: `atime=off`.<sup>[1](#fn1),[15](#fn15)</sup>
 
-* We want to automatically activate hot spare drives if another drive fails: `autoreplace=on`.<sup>[3](#fn3)</sup>
-
 * We use LZ4 compression, which is extremely efficient and may even improve performance by reducing I/O to the drives: `compression=lz4`.<sup>[1](#fn1),[2](#fn2),[3](#fn3),[4](#fn4),[11](#fn11),[13](#fn13),[14](#fn14)</sup>
 
 * Just like with prefetching, InnoDB has its own caching logic, so ZFS's caching would be redundant and less well optimized. We have ZFS cache only metadata: `primarycache=metadata`.<sup>[1](#fn1),[2](#fn2),[10](#fn10),[13](#fn13)</sup>
@@ -118,7 +119,6 @@ sudo zpool create                          \
 sudo zfs create              \
     -o mountpoint=/datastore \
     -o atime=off             \
-    -o autoreplace=on        \
     -o compression=lz4       \
     -o dnodesize=auto        \
     -o primarycache=metadata \
