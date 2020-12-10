@@ -38,8 +38,8 @@ for driveIndex in {0..23}; do
             MetadataSettings=0
 
     sudo intelmas show              \
-        -intelssd ${driveIndex}     \
-        -display SectorSize
+        -display SectorSize         \
+        -intelssd ${driveIndex}
 done
 ```
 <sup>[5](#fn5),[9](#fn9)</sup>
