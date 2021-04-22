@@ -134,7 +134,7 @@ sudo zfs get acltype
 
 * Although we're not using a ZIL device because all our drives are the same (fast) speed, we still hint to ZFS that throughput is more important than latency for our workload: `logbias=throughput`.<sup>[1](#fn1),[2](#fn2),[14](#fn14)</sup>
 
-** ZIL may still have major benefits in this scenario. See <a href="https://github.com/letsencrypt/openzfs-nvme-databases/issues/7">#7</a>.
+    * ZIL may still have major benefits in this scenario. See <a href="https://github.com/letsencrypt/openzfs-nvme-databases/issues/7">#7</a>.
 
 * InnoDB's default page size is 16KB. (This would be interesting to experiment with.) We know every write will be that size, and it's a multiple of the drives' sector size. So, we set the tablespace dataset's record size to match: `recordsize=16k`.<sup>[1](#fn1),[2](#fn2),[10](#fn10),[13](#fn13),[14](#fn14),[15](#fn15)</sup>
 
