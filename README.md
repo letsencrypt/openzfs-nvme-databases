@@ -102,7 +102,9 @@ sudo zpool create                          \
 
 * We've no need to incur the overhead of tracking when files were last accessed: `atime=off`.<sup>[1](#fn1),[15](#fn15)</sup>
 
-* We use LZ4 compression, which is extremely efficient and may even improve performance by reducing I/O to the drives: `compression=lz4`.<sup>[1](#fn1),[2](#fn2),[3](#fn3),[4](#fn4),[11](#fn11),[13](#fn13),[14](#fn14)</sup>
+* We currently use LZ4 compression, which is extremely efficient and may even improve performance by reducing I/O to the drives: `compression=lz4`.<sup>[1](#fn1),[2](#fn2),[3](#fn3),[4](#fn4),[11](#fn11),[13](#fn13),[14](#fn14)</sup>
+
+    * The performance effects may be more mixed since our record size is only twice the sector size, meaning that compression can prevent relatively few sector writes. We might re-evaluate this choice. See <a href="https://github.com/letsencrypt/openzfs-nvme-databases/issues/9">#9</a>.
 
 * Just like with prefetching, InnoDB has its own caching logic, so ZFS's caching would be redundant and less well optimized. We have ZFS cache only metadata: `primarycache=metadata`.<sup>[1](#fn1),[2](#fn2),[10](#fn10),[13](#fn13)</sup>
 
@@ -177,7 +179,7 @@ sudo zfs create                 \
 
 <a name="fn1">1</a>: https://shatteredsilicon.net/blog/2020/06/05/mysql-mariadb-innodb-on-zfs/
 
-<a name="fn2">2</a>: https://openzfs.org/wiki/Performance_tuning
+<a name="fn2">2</a>: https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html
 
 <a name="fn3">3</a>: https://pthree.org/2012/12/13/zfs-administration-part-viii-zpool-best-practices-and-caveats/
 
