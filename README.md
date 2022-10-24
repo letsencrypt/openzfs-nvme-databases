@@ -155,8 +155,6 @@ sudo zfs create                 \
 
 ## MariaDB settings
 
-* ZFS has very efficient checksumming that's integral to its operation. So, we turn off InnoDB's checksums, which would be redundant: `innodb_checksum_algorithm=none`.[^1]
-
 * Because ZFS writes are atomic and we've aligned page/record sizes, we disable the doublewrite buffer in order to reduce overhead: `innodb_doublewrite=0`.[^1][^2][^10][^14][^15]
 
 * We store tables in individual files, for much easier backup, recovery, or relocation: `innodb_file_per_table=ON`.[^13]
@@ -168,6 +166,8 @@ sudo zfs create                 \
 * We disable proactively flushing pages in the same extent, because group writes are not an issue with aligned page/record sizes: `innodb_flush_neighbors=0`.[^22][^23]
 
 * We increase target & max IOPS above the defaults. We still use conservative values to avoid excessive SSD wear,[^24] but the defaults were tuned for spinning disks: `innodb_io_capacity=1000`, `innodb_io_capacity_max=2500`.[^23]
+
+* ~~ZFS has very efficient checksumming that's integral to its operation. We turned off InnoDB's checksums, which would be redundant: `innodb_checksum_algorithm=none`.[^1]~~ [Checksums are required as of MariaDB 10.6](https://mariadb.com/kb/en/innodb-system-variables/#innodb_checksum_algorithm).
 
 ## Operations
 
