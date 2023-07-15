@@ -64,7 +64,7 @@ done
 
 * We match our drives' best-performing 8KB sector size: `ashift=13`.[^1][^2][^3][^4]
 
-* We want to automatically activate hot spare drives if another drive fails: `autoreplace=on`.[^3]
+* We want to automatically activate newly inserted replacements for failed drives: `autoreplace=on`.[^25]
 
 * We use `/dev/disk/by-id/` paths to identify drives, in case they're swapped around to different drive bays or the OS' device naming schema changes.[^3]
 
@@ -224,3 +224,5 @@ sudo zfs create                 \
 [^23]: https://dev.mysql.com/doc/refman/5.7/en/optimizing-innodb-diskio.html
 
 [^24]: https://www.percona.com/blog/2019/12/18/give-love-to-your-ssds-reduce-innodb_io_capacity_max/
+
+[^25]: https://openzfs.github.io/openzfs-docs/man/7/zpoolprops.7.html#autoreplace
