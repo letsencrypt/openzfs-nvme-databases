@@ -20,26 +20,26 @@ Accordingly, we're tuning ZFS and MariaDB for performance over durability, avoid
 
 ## Preparing the drives
 
-Many modern storage drives can present different sector sizes (LBA formats) to the host system. Only one (or none) will be their internal, best-performing sector size. This is often the largest sector size they can natively support, e.g. "4Kn."[^1][^2][^3][^4] We currently use Intel NVMe drives, which have a changeable "Variable Sector Size."[^5] Intel's online documentation and specifications don't list the sector size options for the P4610 model we use, but scanning it showed us two possible values: 0 (512B) or 1 (4KB). flashbench[^6][^7] results strongly suggest that the internal sector size is 8KB.
+Many modern storage drives can present different sector sizes (LBA formats) to the host system. Only one (or none) will be their internal, best-performing sector size. This is often the largest sector size they can natively support, e.g. "4Kn."[^1][^2][^3][^4] We've used some Solidigm (formerly Intel) NVMe drives, which have a changeable "variable sector size."[^5] The online documentation and specifications didn't list the sector size options for the P4610 model we use, but scanning it showed us two possible values: 0 (512B) or 1 (4KB). flashbench[^6][^7] results strongly suggest that the internal sector size is 8KB.
 
 ### Implementation
 
-We use the Intel Memory & Storage Tool[^8] to set the Variable Sector Size to 4,096, the best-performing of the available options.
+We use the Solidigm Storage Tool[^8] to set the Variable Sector Size to 4,096, the best-performing of the available options.
 
 **WARNING:** This erases all data.
 ```
 for driveIndex in {0..23}; do
-    sudo intelmas start             \
-        -intelssd ${driveIndex}     \
+    sudo sst start                  \
+        -ssd ${driveIndex}          \
         -nvmeformat                 \
             LBAFormat=1             \
             SecureEraseSetting=0    \
             ProtectionInformation=0 \
             MetadataSettings=0
 
-    sudo intelmas show              \
+    sudo sst show                   \
         -display SectorSize         \
-        -intelssd ${driveIndex}
+        -ssd ${driveIndex}
 done
 ```
 [^5][^9]
@@ -185,15 +185,15 @@ sudo zfs create                 \
 
 [^4]: https://wiki.debian.org/ZFS#Advanced_Topics
 
-[^5]: https://www.intel.com/content/www/us/en/support/articles/000016238/memory-and-storage/data-center-ssds.html
+[^5]: https://www.solidigm.com/content/dam/solidigm/en/site/products/data-center/d7/p5520/documents/P5520-P5620-Product-Brief.pdf
 
 [^6]: https://github.com/bradfa/flashbench
 
 [^7]: https://old.reddit.com/r/zfs/comments/aq913n/anyone_know_what_the_physical_sector_size_ashift/egjudnr/
 
-[^8]: https://downloadcenter.intel.com/product/140108/intel-ssd-dc-p4610-series
+[^8]: https://www.solidigm.com/us/en/support-page/drivers-downloads/ka-00085.html
 
-[^9]: https://downloadmirror.intel.com/29821/eng/Intel_Memory_And_Storage_Tool_User%20Guide-Public-342245-004US.pdf
+[^9]: https://sdmsdfwdriver.blob.core.windows.net/files/kba-gcc/drivers-downloads/ka-00085/sst--1-13/solidigm-storage-tool-cli-user-guide-727329-010us.pdf
 
 [^10]: http://assets.en.oreilly.com/1/event/21/Optimizing%20MySQL%20Performance%20with%20ZFS%20Presentation.pdf
 
